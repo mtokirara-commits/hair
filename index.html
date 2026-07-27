@@ -1393,9 +1393,6 @@ const STORE_NAME = '綺薇';
 // この店舗専用の固定セッションID。ランダム生成をやめ、常に同じFirestoreドキュメントを使うことで、
 // 「解除」しても登録済みヘアメ・待機中/完了中のキャストが消えないようにする（削除は明示操作のみ）。
 const STORE_SESSION_ID = 'KIRARA';
-function fmtHM(d){
-  return String(d.getHours()).padStart(2,'0') + ':' + String(d.getMinutes()).padStart(2,'0');
-}
 
 function genId(){ return 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
 function normalizeCode(s){ return String(s||'').trim().toLowerCase(); }
@@ -1446,7 +1443,8 @@ let state = {
   queue: [],
   shiftOpen: false,
   activeHairme: [],
-  tickTimer: null
+  tickTimer: null,
+  lastUpdateMs: null
 };
 
 function boot(){
@@ -2123,7 +2121,7 @@ function resetSession(){
   if(!confirm('セッションを解除して役割選択に戻りますか？')) return;
   teardown();
   clearLocal();
-  state = {role:null, sessionId:null, hairmeName:null, unsubQueue:null, unsubSession:null, unsubActive:null, hairmeRoster:[], queue:[], shiftOpen:false, activeHairme:[], tickTimer:null};
+  state = {role:null, sessionId:null, hairmeName:null, unsubQueue:null, unsubSession:null, unsubActive:null, hairmeRoster:[], queue:[], shiftOpen:false, activeHairme:[], tickTimer:null, lastUpdateMs:null};
   renderRoleSelect();
 }
 
